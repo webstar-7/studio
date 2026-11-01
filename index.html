@@ -36,6 +36,10 @@ header{display:flex;align-items:center;gap:6px;padding:0 10px;background:var(--p
 .btn.ai{border-color:rgba(242,178,51,.55);color:var(--accent)}
 .btn.ai:hover{background:rgba(242,178,51,.1)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
+.aictx{display:flex;gap:10px;align-items:center;background:var(--panel2);border:1px solid var(--line);border-radius:8px;padding:8px 10px;color:var(--muted);font-size:12px;line-height:1.45}
+.aictx img{height:54px;max-width:76px;object-fit:contain;background:#fff;border-radius:2px;flex:none;box-shadow:0 1px 4px rgba(0,0,0,.4)}
+.aictx b{color:var(--text);font-weight:600}
+#aiMode button{padding:6px 4px}
 .chips button{background:var(--panel2);border:1px solid var(--line);border-radius:999px;padding:4px 10px;cursor:pointer;font-size:12px;color:var(--muted)}
 .chips button:hover{color:var(--text);border-color:#4a5161}
 details.set summary{cursor:pointer;color:var(--muted);font-size:12px}
@@ -58,7 +62,24 @@ main{display:grid;grid-template-columns:52px 1fr 300px;min-height:0}
 .tool.on{background:var(--accent);color:var(--accent-ink)}
 .tool .k{position:absolute;right:3px;bottom:1px;font-size:9px;opacity:.6;font-family:var(--mono)}
 #tools .sep{width:26px;height:1px;margin:4px 0}
-#stage{position:relative;overflow:hidden;background:var(--paste);min-width:0;touch-action:none}
+#stage{position:relative;overflow:hidden;background:var(--paste);min-width:0;touch-action:none;flex:1 1 auto;min-height:0}
+.center{display:flex;flex-direction:column;min-width:0;min-height:0}
+#pagebar{display:flex;align-items:center;gap:10px;padding:6px 10px;background:var(--panel);border-top:1px solid var(--line);min-width:0}
+#pageList{display:flex;gap:8px;overflow-x:auto;flex:0 1 auto;min-width:0;align-items:flex-end;padding:3px 2px}
+.pg{flex:none;display:grid;gap:2px;justify-items:center;background:none;border:0;cursor:pointer;color:var(--muted);padding:0}
+.pg .pth{height:48px;display:flex;align-items:center}
+.pg img{height:48px;max-width:84px;display:block;background:#fff;border-radius:2px;box-shadow:0 1px 4px rgba(0,0,0,.5);outline:2px solid transparent;outline-offset:2px;object-fit:contain}
+.pg:hover img{outline-color:#4a5161}
+.pg.on img{outline-color:var(--accent)}
+.pg.on .pn{color:var(--accent);font-weight:700}
+.pg.dragover img{outline-color:#3b82f6}
+.pg .pn{font-size:10px;font-variant-numeric:tabular-nums}
+.pgadd{flex:none;height:48px;width:38px;margin-bottom:12px;border:1.5px dashed var(--line);border-radius:6px;background:none;color:var(--muted);font-size:20px;line-height:1;cursor:pointer}
+.pgadd:hover{border-color:var(--accent);color:var(--accent)}
+.pgtools{display:flex;align-items:center;gap:2px;flex:none;margin-left:auto}
+#pageLabel{color:var(--muted);font-size:12px;margin-right:4px;white-space:nowrap;font-variant-numeric:tabular-nums}
+.pgdel{padding:3px 8px;font-size:12px;margin-left:4px}
+@media (max-width:860px){ .pgtools #pageLabel,.pgdel{display:none} }
 #cv{position:absolute;inset:0;width:100%;height:100%;display:block;touch-action:none}
 #ted{position:absolute;margin:0;padding:0;border:0;outline:1px dashed var(--accent);background:rgba(255,255,255,.04);resize:none;overflow:hidden;white-space:pre-wrap;word-wrap:break-word;transform-origin:center center;z-index:5}
 #drop{position:absolute;inset:12px;border:2px dashed var(--accent);border-radius:12px;display:grid;place-items:center;background:rgba(242,178,51,.08);color:var(--accent);font-size:16px;font-weight:600;pointer-events:none;z-index:6}
@@ -204,10 +225,24 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
 </header>
 <main>
   <nav id="tools" aria-label="Tools"></nav>
+  <div class="center">
   <div id="stage">
     <canvas id="cv"></canvas>
     <textarea id="ted" hidden spellcheck="false"></textarea>
     <div id="drop" hidden>Drop images, fonts, a PDF or a project file</div>
+  </div>
+  <div id="pagebar" aria-label="Pages">
+    <div id="pageList"></div>
+    <button class="pgadd" data-pgact="add" title="Add a blank page (PageDown / PageUp move between pages)" aria-label="Add a page">+</button>
+    <div class="pgtools">
+      <span id="pageLabel">Page 1 of 1</span>
+      <button class="ibtn" data-pgact="prev" title="Move this page earlier"><svg viewBox="0 0 20 20"><path d="M12 5l-5 5 5 5"/></svg></button>
+      <button class="ibtn" data-pgact="next" title="Move this page later"><svg viewBox="0 0 20 20"><path d="M8 5l5 5-5 5"/></svg></button>
+      <button class="ibtn" data-pgact="dup" title="Duplicate this page"><svg viewBox="0 0 20 20"><rect x="6.5" y="6.5" width="10" height="10" rx="1.5"/><path d="M13.5 6.5V3.5h-10v10h3"/></svg></button>
+      <button class="ibtn" data-pgact="lib" title="Add a saved design as pages"><svg viewBox="0 0 20 20"><rect x="3" y="3" width="6" height="6" rx="1"/><rect x="11" y="3" width="6" height="6" rx="1"/><rect x="3" y="11" width="6" height="6" rx="1"/><path d="M14 11v6M11 14h6"/></svg></button>
+      <button class="btn pgdel" data-pgact="del" title="Delete this page">Delete page</button>
+    </div>
+  </div>
   </div>
   <aside id="side">
     <div class="ptabs"><button class="on" data-tab="props">Properties</button><button data-tab="layers">Layers</button></div>
@@ -255,6 +290,7 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
     <div class="bd">
       <div class="row"><span class="lbl">Format</span><div class="seg" id="exFmt" style="flex:1"><button data-v="png" class="on">PNG</button><button data-v="jpg">JPG</button><button data-v="pdf">PDF</button></div></div>
       <div class="row"><span class="lbl">Quality</span><div class="fld" style="flex:1"><select id="exDpi"><option value="300">300 DPI · print</option><option value="150">150 DPI · draft</option><option value="96">96 DPI · screen / WhatsApp</option></select></div></div>
+      <div class="row" id="exPagesRow" hidden><span class="lbl">Pages</span><div class="fld" style="flex:1"><select id="exPages"><option value="all">All pages</option><option value="cur">This page only</option></select></div></div>
       <div class="row"><span class="lbl">Paper</span><div class="fld" style="flex:1"><select id="exSheet"><option value="page">Same size as the design</option><option value="A4">A4 sheet</option><option value="A3">A3 sheet</option><option value="Letter">Letter sheet</option></select></div></div>
       <div class="row" id="exCopiesRow" hidden><span class="lbl">Copies</span><div class="fld" style="flex:1"><select id="exCopies"></select></div></div>
       <label class="chk" id="exMarksRow" hidden><input type="checkbox" id="exMarks" checked> Cut marks</label>
@@ -305,8 +341,11 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
   <div class="box" role="dialog" aria-labelledby="aiT" style="width:min(620px,100%)">
     <div class="hd"><h3 id="aiT">AI Design</h3><button class="ibtn" data-close><svg viewBox="0 0 20 20"><path d="M5 5l10 10M15 5L5 15"/></svg></button></div>
     <div class="bd">
-      <div class="seg" id="aiMode"><button data-v="new" class="on">Start a new design</button><button data-v="edit">Change my current design</button></div>
-      <textarea class="ta" id="aiPrompt" style="min-height:110px" placeholder="Describe what you want. Example: A mug for Kofi's 30th birthday, black and gold, his name big in the middle with stars around it."></textarea>
+      <div class="seg" id="aiMode"><button data-v="edit" class="on">Change this page</button><button data-v="page">Add a new page</button><button data-v="new">New design</button></div>
+      <div class="aictx" id="aiCtx"></div>
+      <textarea class="ta" id="aiPrompt" style="min-height:110px"></textarea>
+      <label class="chk" id="aiSelRow" hidden><input type="checkbox" id="aiSelOnly" checked> <span id="aiSelLbl">Only change what I selected</span></label>
+      <label class="chk" id="aiLookRow"><input type="checkbox" id="aiLook" checked> Show the AI a picture of the page (better results, a little more credit)</label>
       <div class="chips" id="aiChips"></div>
       <div class="note" id="aiStatus"></div>
       <details class="set" id="aiSet"><summary>AI settings (API key)</summary>
@@ -364,7 +403,7 @@ kbd{font-family:var(--mono);font-size:11px;background:var(--panel2);border:1px s
       <div class="fld"><label>Find</label><input id="fdFind" spellcheck="false" autocomplete="off"></div>
       <div class="fld"><label>Replace</label><input id="fdRep" spellcheck="false" autocomplete="off"></div>
       <label class="chk"><input type="checkbox" id="fdCase"> Match capital letters</label>
-      <div class="note" id="fdInfo">Changes every text box in this design. Handy for reusing a certificate or invoice with new names and dates.</div>
+      <div class="note" id="fdInfo">Changes every text box on every page of this design. Handy for reusing a certificate or invoice with new names and dates.</div>
     </div>
     <div class="ft">
       <button class="btn" data-close>Close</button>
@@ -933,13 +972,14 @@ function fit() {
 /* ---------------- history & autosave ---------------- */
 const snap = () => JSON.stringify({doc, objs});
 function commit() {
+  scheduleCurThumb();
   hist = hist.slice(0, hIdx + 1); hist.push(snap());
   if (hist.length > 80) hist.shift();
   hIdx = hist.length - 1; undoState(); scheduleSave();
 }
 function resetHistory() { hist = [snap()]; hIdx = 0; undoState(); }
 function restore(s) {
-  const d = JSON.parse(s); doc = d.doc; objs = d.objs;
+  const d = JSON.parse(s); doc = d.doc; objs = d.objs; ensurePages(); thumbCache.clear();
   if (!byId(selId)) selId = null;
   extra = new Set([...extra].filter(id => byId(id))); if (!selId && extra.size) { selId = [...extra][0]; extra.delete(selId); }
   refreshAll(); scheduleSave();
@@ -947,8 +987,8 @@ function restore(s) {
 function undo() { endEdit(); if (hIdx > 0) { hIdx--; restore(hist[hIdx]); undoState(); } }
 function redo() { endEdit(); if (hIdx < hist.length - 1) { hIdx++; restore(hist[hIdx]); undoState(); } }
 function undoState() { $('#undoBtn').disabled = hIdx <= 0; $('#redoBtn').disabled = hIdx >= hist.length - 1; $('#undoBtn').style.opacity = hIdx <= 0 ? .35 : 1; $('#redoBtn').style.opacity = hIdx >= hist.length - 1 ? .35 : 1; }
-function usedAssets() { const a = {}; objs.forEach(o => { if (o.type === 'image' && assets[o.asset]) a[o.asset] = assets[o.asset]; }); return a; }
-function usedFonts() { const f = {}; objs.forEach(o => { if (o.type === 'text' && fonts[o.font]) f[o.font] = fonts[o.font]; }); return f; }
+function usedAssets() { const a = {}; allObjs().forEach(o => { if (o.type === 'image' && assets[o.asset]) a[o.asset] = assets[o.asset]; }); return a; }
+function usedFonts() { const f = {}; allObjs().forEach(o => { if (o.type === 'text' && fonts[o.font]) f[o.font] = fonts[o.font]; }); return f; }
 /* ---------------- object operations ---------------- */
 function add(o) { objs.push(o); one(o.id); refreshAll(); }
 function select(id, additive) {
@@ -1322,23 +1362,28 @@ function download(blob, name) {
   a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove();
   setTimeout(() => URL.revokeObjectURL(url), 4000);
 }
-function makePdf(jpeg, pxW, pxH, ptW, ptH) {
+function makePdf(jpeg, pxW, pxH, ptW, ptH) { return makePdfPages([{jpeg, pxW, pxH, ptW, ptH}]); }
+function makePdfPages(pages) {
   const enc = new TextEncoder(), parts = [], offs = [];
   let len = 0;
   const put = d => { const b = typeof d === 'string' ? enc.encode(d) : d; parts.push(b); len += b.length; };
   const obj = (n, body) => { offs[n] = len; put(`${n} 0 obj\n`); body(); put('\nendobj\n'); };
   const f = v => (+v).toFixed(2);
   put('%PDF-1.4\n%\xE2\xE3\xCF\xD3\n');
+  const kids = pages.map((_, i) => `${3 + i * 3} 0 R`).join(' ');
   obj(1, () => put('<< /Type /Catalog /Pages 2 0 R >>'));
-  obj(2, () => put('<< /Type /Pages /Kids [3 0 R] /Count 1 >>'));
-  obj(3, () => put(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${f(ptW)} ${f(ptH)}] /Resources << /XObject << /Im0 4 0 R >> >> /Contents 5 0 R >>`));
-  obj(4, () => { put(`<< /Type /XObject /Subtype /Image /Width ${pxW} /Height ${pxH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${jpeg.length} >>\nstream\n`); put(jpeg); put('\nendstream'); });
-  const content = `q ${f(ptW)} 0 0 ${f(ptH)} 0 0 cm /Im0 Do Q`;
-  obj(5, () => put(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`));
-  const xref = len;
-  let x = 'xref\n0 6\n0000000000 65535 f \n';
-  for (let i = 1; i <= 5; i++) x += String(offs[i]).padStart(10, '0') + ' 00000 n \n';
-  put(x + `trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
+  obj(2, () => put(`<< /Type /Pages /Kids [${kids}] /Count ${pages.length} >>`));
+  pages.forEach((pg, i) => {
+    const n = 3 + i * 3;
+    obj(n, () => put(`<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${f(pg.ptW)} ${f(pg.ptH)}] /Resources << /XObject << /Im0 ${n + 1} 0 R >> >> /Contents ${n + 2} 0 R >>`));
+    obj(n + 1, () => { put(`<< /Type /XObject /Subtype /Image /Width ${pg.pxW} /Height ${pg.pxH} /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ${pg.jpeg.length} >>\nstream\n`); put(pg.jpeg); put('\nendstream'); });
+    const content = `q ${f(pg.ptW)} 0 0 ${f(pg.ptH)} 0 0 cm /Im0 Do Q`;
+    obj(n + 2, () => put(`<< /Length ${content.length} >>\nstream\n${content}\nendstream`));
+  });
+  const total = 3 + pages.length * 3, xref = len;
+  let x = `xref\n0 ${total}\n0000000000 65535 f \n`;
+  for (let i = 1; i < total; i++) x += String(offs[i]).padStart(10, '0') + ' 00000 n \n';
+  put(x + `trailer\n<< /Size ${total} /Root 1 0 R >>\nstartxref\n${xref}\n%%EOF`);
   return new Blob(parts, {type: 'application/pdf'});
 }
 const fileBase = () => (doc.name || 'design').replace(/[\\/:*?"<>|]+/g, '').trim() || 'design';
@@ -1389,7 +1434,14 @@ function currentLayout() {
   const key = $('#exSheet').value; if (key === 'page') return null;
   const [sw, sh] = SHEETS[key]; return Object.assign(sheetLayout(+$('#exCopies').value || 1, sw, sh, doc.wmm, doc.hmm), {key});
 }
+const exportPages = () => (pageCount() > 1 && $('#exPages').value === 'all' ? doc.pages.map((_, i) => i) : [doc.cur]);
 function exInfo() {
+  $('#exPagesRow').hidden = pageCount() < 2;
+  if (pageCount() > 1) $('#exPages').options[0].textContent = `All ${pageCount()} pages`;
+  exInfoOne();
+  if (exportPages().length > 1) $('#exInfo').innerHTML += `<br><b>All ${pageCount()} pages</b>: ${exFmt === 'pdf' ? 'one PDF with a page for each' : `${pageCount()} separate ${exFmt.toUpperCase()} files (your browser may ask to allow several downloads)`}.`;
+}
+function exInfoOne() {
   const s = +$('#exDpi').value / DPI, sheet = $('#exSheet').value !== 'page';
   $('#exCopiesRow').hidden = !sheet; $('#exMarksRow').hidden = !sheet;
   $('#exTrRow').hidden = exFmt !== 'png' || sheet;
@@ -1433,14 +1485,18 @@ async function doExport() {
   const tr = exFmt === 'png' && $('#exTr').checked && $('#exSheet').value === 'page', mirror = $('#exMirror').checked;
   const btn = $('#exGo'); btn.disabled = true; btn.textContent = 'Working…';
   try {
-    const out = await buildOutput(tr), c = out.c, nm = fileBase() + (out.n > 1 ? `-${out.n}-up` : '') + (mirror ? '-mirrored' : '');
-    if (exFmt === 'png') download(await toBlob(c, 'image/png'), nm + '.png');
-    else if (exFmt === 'jpg') download(await toBlob(c, 'image/jpeg', 0.95), nm + '.jpg');
-    else {
-      const jb = new Uint8Array(await (await toBlob(c, 'image/jpeg', 0.95)).arrayBuffer());
-      download(makePdf(jb, c.width, c.height, out.wmm / 25.4 * 72, out.hmm / 25.4 * 72), nm + '.pdf');
+    const idx = exportPages(), many = idx.length > 1, pdfPages = [];
+    let base = fileBase();
+    for (const i of idx) {
+      if (many) btn.textContent = `Page ${i + 1} of ${pageCount()}…`;
+      const out = await withPage(i, () => buildOutput(tr)), c = out.c;
+      const nm = base + (many ? `-page${i + 1}` : '') + (out.n > 1 ? `-${out.n}-up` : '') + (mirror ? '-mirrored' : '');
+      if (exFmt === 'pdf') { const jb = new Uint8Array(await (await toBlob(c, 'image/jpeg', 0.95)).arrayBuffer()); pdfPages.push({jpeg: jb, pxW: c.width, pxH: c.height, ptW: out.wmm / 25.4 * 72, ptH: out.hmm / 25.4 * 72, n: out.n}); }
+      else { download(await toBlob(c, exFmt === 'png' ? 'image/png' : 'image/jpeg', 0.95), nm + (exFmt === 'png' ? '.png' : '.jpg')); if (many) await new Promise(r => setTimeout(r, 350)); }
+      c.width = c.height = 0;
     }
-    closeDlg('#expDlg'); toast('Exported ' + exFmt.toUpperCase());
+    if (exFmt === 'pdf') download(makePdfPages(pdfPages), base + (!many && pdfPages[0].n > 1 ? `-${pdfPages[0].n}-up` : '') + (mirror ? '-mirrored' : '') + '.pdf');
+    closeDlg('#expDlg'); toast(many ? `Exported ${idx.length} pages as ${exFmt.toUpperCase()}` : 'Exported ' + exFmt.toUpperCase());
   } catch (e) { console.warn(e); toast('Export failed: the design may be too large for this browser. Try 150 DPI.'); }
   btn.disabled = false; btn.textContent = 'Download file';
 }
@@ -1448,11 +1504,13 @@ async function doPrint() {
   const win = window.open('', '_blank');
   if (!win) { toast('Allow pop-ups for this page to print.'); return; }
   win.document.write('<p style="font:14px sans-serif;padding:20px">Preparing print…</p>');
-  const out = await buildOutput(false), c = out.c;
-  const url = URL.createObjectURL(await toBlob(c, 'image/png'));
-  const wm = out.wmm, hm = out.hmm;
+  const items = [];
+  for (const i of exportPages()) { const out = await withPage(i, () => buildOutput(false)); items.push({url: URL.createObjectURL(await toBlob(out.c, 'image/png')), wm: out.wmm, hm: out.hmm}); }
+  const sizes = [...new Set(items.map(it => `${it.wm}x${it.hm}`))];
+  const css = sizes.map((k, j) => { const [wm, hm] = k.split('x'); return `@page s${j}{size:${wm}mm ${hm}mm;margin:0} .s${j}{page:s${j};width:${wm}mm;height:${hm}mm}`; }).join('');
+  const first = items[0];
   win.document.open();
-  win.document.write(`<!doctype html><html><head><title>${esc(fileBase())}</title><style>@page{size:${wm}mm ${hm}mm;margin:0}html,body{margin:0}img{width:${wm}mm;height:${hm}mm;display:block}</style></head><body><img src="${url}" onload="setTimeout(function(){window.focus();window.print()},250)"></body></html>`);
+  win.document.write(`<!doctype html><html><head><title>${esc(fileBase())}</title><style>@page{size:${first.wm}mm ${first.hm}mm;margin:0}html,body{margin:0}img{display:block;break-after:page}img:last-child{break-after:auto}${css}</style></head><body>${items.map(it => `<img class="s${sizes.indexOf(`${it.wm}x${it.hm}`)}" src="${it.url}">`).join('')}<script>var n=document.images.length,k=0;function go(){if(++k>=n)setTimeout(function(){window.focus();window.print()},250)}for(var i=0;i<n;i++){if(document.images[i].complete)go();else document.images[i].onload=go}<\/script></body></html>`);
   win.document.close(); closeDlg('#expDlg');
 }
 
@@ -1463,6 +1521,149 @@ function trimPage() {
   doc.wmm = Math.max(1, px2mm(b.w)); doc.hmm = Math.max(1, px2mm(b.h)); one(null); fit(); refreshAll(); commit();
   toast(`Page fitted to your design: ${fmtMm(doc.wmm)} × ${fmtMm(doc.hmm)} mm. Ctrl+Z undoes it.`);
 }
+
+/* ---------------- pages ----------------
+   doc.pages holds every page. The page on screen lives in the globals (doc.wmm, doc.hmm, doc.bg,
+   doc.transparent, objs) and its record keeps objs: null; every other page keeps its own objs. */
+const thumbCache = new Map();
+let pgThumbT = null, dragPg = -1;
+function ensurePages() {
+  if (!doc) return;
+  if (!Array.isArray(doc.pages) || !doc.pages.length) doc.pages = [{pid: newId(), objs: null}];
+  let cur = doc.pages.findIndex(p => p.objs === null || p.objs === undefined);
+  if (cur < 0) cur = clamp(doc.cur | 0, 0, doc.pages.length - 1);
+  doc.cur = cur;
+  doc.pages.forEach((p, i) => { if (!p.pid) p.pid = newId(); if (i !== cur && !Array.isArray(p.objs)) p.objs = []; });
+  stashPage();
+}
+function stashPage() { Object.assign(doc.pages[doc.cur], {wmm: doc.wmm, hmm: doc.hmm, bg: doc.bg, transparent: !!doc.transparent, objs: null}); }
+const pageCount = () => (doc && doc.pages ? doc.pages.length : 1);
+const pageObjs = i => (i === doc.cur ? objs : (doc.pages[i].objs || []));
+function allObjs() { let a = objs.slice(); (doc.pages || []).forEach((p, i) => { if (i !== doc.cur && p.objs) a = a.concat(p.objs); }); return a; }
+function pageRec(i) { return i === doc.cur ? {pid: doc.pages[i].pid, wmm: doc.wmm, hmm: doc.hmm, bg: doc.bg, transparent: doc.transparent} : doc.pages[i]; }
+function parkCurrent() { stashPage(); doc.pages[doc.cur].objs = objs; }
+function loadPageGlobals(i) {
+  const p = doc.pages[i];
+  doc.wmm = p.wmm || doc.wmm; doc.hmm = p.hmm || doc.hmm; doc.bg = p.bg || '#ffffff'; doc.transparent = !!p.transparent;
+  objs = p.objs || []; p.objs = null; doc.cur = i; objs.forEach(fitText);
+}
+function switchPage(i) {
+  ensurePages();
+  if (i === doc.cur || i < 0 || i >= doc.pages.length) return;
+  endEdit(); if (cropState) cancelCrop();
+  thumbCache.set(doc.pages[doc.cur].pid, thumbFor(pageRec(doc.cur), objs, 96));
+  parkCurrent(); loadPageGlobals(i); one(null);
+  if (hist[hIdx] !== undefined) hist[hIdx] = snap(); // undo stays consistent without adding a step
+  fit(); refreshAll(); scheduleSave();
+}
+// run fn with page i on screen behind the scenes (export, AI), then put everything back
+async function withPage(i, fn) {
+  if (i === doc.cur) return fn();
+  const cur = doc.cur, sel = [selId, new Set(extra)];
+  parkCurrent(); loadPageGlobals(i);
+  try { return await fn(); }
+  finally { parkCurrent(); loadPageGlobals(cur); selId = sel[0]; extra = sel[1]; }
+}
+function insertPage(rec = {}, at = doc.cur + 1, go = true, silent = false) {
+  ensurePages(); endEdit();
+  const p = {pid: newId(), wmm: rec.wmm || doc.wmm, hmm: rec.hmm || doc.hmm, bg: rec.bg || '#ffffff', transparent: !!rec.transparent, objs: rec.objs || []};
+  doc.pages.splice(at, 0, p);
+  if (at <= doc.cur) doc.cur++;
+  if (go) { parkCurrent(); loadPageGlobals(at); one(null); fit(); }
+  if (!silent) { refreshAll(); commit(); }
+  return p;
+}
+function addBlankPage() { insertPage({bg: doc.transparent ? '#ffffff' : doc.bg}); toast(`Page ${doc.cur + 1} added. It is part of this design and saves with it.`); }
+function duplicatePage() {
+  const copies = cloneList(objs, 0, 0); copies.forEach((c, i) => { c.locked = objs[i].locked; c.name = objs[i].name; });
+  insertPage({bg: doc.bg, transparent: doc.transparent, objs: copies});
+  toast(`Page ${doc.cur} copied to page ${doc.cur + 1}`);
+}
+function movePageTo(from, to) {
+  ensurePages(); if (from === to || to < 0 || to >= doc.pages.length) return;
+  stashPage(); const [p] = doc.pages.splice(from, 1); doc.pages.splice(to, 0, p);
+  doc.cur = doc.pages.findIndex(q => q.objs === null);
+  refreshAll(); commit();
+}
+function deletePage(i = doc.cur) {
+  ensurePages();
+  if (doc.pages.length < 2) { toast('A design needs at least one page.'); return; }
+  endEdit(); if (cropState) cancelCrop();
+  thumbCache.delete(doc.pages[i].pid);
+  if (i === doc.cur) {
+    doc.pages.splice(i, 1);
+    loadPageGlobals(Math.min(i, doc.pages.length - 1));
+  } else { doc.pages.splice(i, 1); if (i < doc.cur) doc.cur--; }
+  one(null); fit(); refreshAll(); commit(); toast('Page deleted. Ctrl+Z brings it back.');
+}
+function thumbFor(rec, list, max = 96) {
+  const pw = mm2px(rec.wmm || 210), ph = mm2px(rec.hmm || 297), sc = Math.min(max * 1.6 / pw, max * 1.6 / ph), c = document.createElement('canvas');
+  c.width = Math.max(1, Math.round(pw * sc)); c.height = Math.max(1, Math.round(ph * sc));
+  const x = c.getContext('2d'); x.setTransform(sc, 0, 0, sc, 0, 0);
+  x.fillStyle = rec.transparent ? '#ffffff' : (rec.bg || '#ffffff'); x.fillRect(0, 0, pw, ph);
+  list.forEach(o => { try { drawObject(x, o, sc); } catch (e) {} });
+  return c.toDataURL('image/jpeg', 0.72);
+}
+const imagesReady = list => list.every(o => o.type !== 'image' || ready(getImg(o.asset)));
+let pagesSoonT = null; const renderPagesSoon = () => { clearTimeout(pagesSoonT); pagesSoonT = setTimeout(renderPages, 500); };
+function renderPages() {
+  if (!doc) return;
+  ensurePages();
+  const n = doc.pages.length;
+  $('#pageList').innerHTML = doc.pages.map((p, i) => {
+    const r = pageRec(i), list = pageObjs(i);
+    let url = thumbCache.get(p.pid);
+    if (!url) { url = thumbFor(r, list, 96); if (imagesReady(list)) thumbCache.set(p.pid, url); else renderPagesSoon(); }
+    return `<button class="pg${i === doc.cur ? ' on' : ''}" data-pg="${i}" draggable="true" title="Page ${i + 1} · ${fmtMm(r.wmm)} × ${fmtMm(r.hmm)} mm${i === doc.cur ? ' (open)' : ''}"><span class="pth"><img src="${url}" alt="Page ${i + 1}"></span><span class="pn">${i + 1}</span></button>`;
+  }).join('');
+  $('#pageLabel').textContent = `Page ${doc.cur + 1} of ${n}`;
+  $('#pagebar [data-pgact="prev"]').disabled = doc.cur === 0;
+  $('#pagebar [data-pgact="next"]').disabled = doc.cur === n - 1;
+  const del = $('#pagebar [data-pgact="del"]'); del.disabled = n < 2; del.classList.remove('confirm'); del.textContent = 'Delete page';
+  const on = $('#pageList .pg.on'); if (on && on.scrollIntoView) on.scrollIntoView({block: 'nearest', inline: 'nearest'});
+}
+function scheduleCurThumb(delay = 350) {
+  clearTimeout(pgThumbT);
+  pgThumbT = setTimeout(() => {
+    if (!doc || !doc.pages) return;
+    const url = thumbFor(pageRec(doc.cur), objs, 96); thumbCache.set(doc.pages[doc.cur].pid, url);
+    const img = $(`#pageList [data-pg="${doc.cur}"] img`); if (img) img.src = url;
+  }, delay);
+}
+async function addDesignAsPages(d) {
+  Object.assign(assets, d.assets || {});
+  for (const k in (d.fonts || {})) if (!fonts[k]) await registerFont(k, d.fonts[k]);
+  const dd = Object.assign({}, d.doc), recs = [];
+  if (Array.isArray(dd.pages) && dd.pages.length) {
+    let cur = dd.pages.findIndex(p => p.objs === null || p.objs === undefined); if (cur < 0) cur = dd.cur | 0;
+    dd.pages.forEach((p, i) => recs.push(i === cur ? {wmm: dd.wmm, hmm: dd.hmm, bg: dd.bg, transparent: dd.transparent, objs: d.objs} : {wmm: p.wmm, hmm: p.hmm, bg: p.bg, transparent: p.transparent, objs: p.objs || []}));
+  } else recs.push({wmm: dd.wmm, hmm: dd.hmm, bg: dd.bg, transparent: dd.transparent, objs: d.objs});
+  // fresh ids so pages never share objects
+  recs.forEach(r => { const g = {}; r.objs = (r.objs || []).map(o => { const c = JSON.parse(JSON.stringify(o)); c.id = newId(); if (c.group) c.group = g[c.group] || (g[c.group] = 'g' + newId()); return c; }); });
+  ensurePages(); stashPage();
+  const at = doc.pages.length;
+  recs.forEach((r, k) => doc.pages.splice(at + k, 0, {pid: newId(), wmm: r.wmm || 210, hmm: r.hmm || 297, bg: r.bg || '#ffffff', transparent: !!r.transparent, objs: r.objs}));
+  parkCurrent(); loadPageGlobals(at); one(null); fit(); refreshAll(); commit();
+  return recs.length;
+}
+$('#pagebar').addEventListener('click', e => {
+  const pg = e.target.closest('[data-pg]'); if (pg) { switchPage(+pg.dataset.pg); return; }
+  const b = e.target.closest('[data-pgact]'); if (!b || b.disabled) return;
+  const a = b.dataset.pgact;
+  if (a === 'add') addBlankPage();
+  else if (a === 'dup') duplicatePage();
+  else if (a === 'prev') movePageTo(doc.cur, doc.cur - 1);
+  else if (a === 'next') movePageTo(doc.cur, doc.cur + 1);
+  else if (a === 'lib') openLibrary(true);
+  else if (a === 'del') {
+    if (!b.classList.contains('confirm')) { b.classList.add('confirm'); b.textContent = `Delete page ${doc.cur + 1}?`; setTimeout(() => { if (b.isConnected && b.classList.contains('confirm')) { b.classList.remove('confirm'); b.textContent = 'Delete page'; } }, 3500); return; }
+    deletePage();
+  }
+});
+$('#pageList').addEventListener('dragstart', e => { const pg = e.target.closest('[data-pg]'); if (pg) { dragPg = +pg.dataset.pg; e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', 'page'); } });
+$('#pageList').addEventListener('dragover', e => { const pg = e.target.closest('[data-pg]'); if (dragPg >= 0 && pg) { e.preventDefault(); $$('#pageList .pg').forEach(q => q.classList.toggle('dragover', q === pg)); } });
+$('#pageList').addEventListener('drop', e => { const pg = e.target.closest('[data-pg]'); if (dragPg >= 0 && pg) { e.preventDefault(); e.stopPropagation(); const to = +pg.dataset.pg; const from = dragPg; dragPg = -1; movePageTo(from, to); } });
+$('#pageList').addEventListener('dragend', () => { dragPg = -1; $$('#pageList .pg').forEach(q => q.classList.remove('dragover')); });
 
 /* ---------------- My Designs library (saved in this browser) ---------------- */
 let db = null, saveT = null, dirty = false, saving = null, again = false;
@@ -1517,12 +1718,14 @@ async function flushSave(force) {
     return;
   }
   // an empty page is not worth keeping unless it was saved before
-  if (!objs.length && !force && !libKnown.has(doc.id)) { dirty = false; saveState(''); return; }
+  if (!allObjs().length && pageCount() < 2 && !force && !libKnown.has(doc.id)) { dirty = false; saveState(''); return; }
   dirty = false; saveState('saving');
   const id = doc.id;
+  ensurePages(); stashPage();
   const data = {id, doc: JSON.parse(JSON.stringify(doc)), objs: JSON.parse(JSON.stringify(objs)), assets: usedAssets(), fonts: usedFonts()};
-  let thumb = ''; try { thumb = makeThumb(); } catch (e) {}
-  const meta = {id, name: doc.name || 'Untitled design', wmm: doc.wmm, hmm: doc.hmm, count: objs.length, updated: Date.now(), thumb};
+  let thumb = ''; try { thumb = doc.cur === 0 ? makeThumb() : thumbFor(pageRec(0), pageObjs(0), 225); } catch (e) {}
+  const r0 = pageRec(0);
+  const meta = {id, name: doc.name || 'Untitled design', wmm: r0.wmm, hmm: r0.hmm, count: allObjs().length, pages: pageCount(), updated: Date.now(), thumb};
   saving = libPut(meta, data).then(() => { libKnown.add(id); setCurrent(id); if (!dirty) saveState('saved'); })
     .catch(e => { dirty = true; saveState('error'); toast(/quota/i.test(String(e && e.name)) ? 'Storage is full. Delete old designs in My Designs, or back them up to a file.' : 'This design could not be saved. Back it up with My Designs → Back up all designs.'); });
   await saving; saving = null;
@@ -1533,6 +1736,8 @@ async function loadDesignData(d, opts = {}) {
   doc = Object.assign(newDoc(210, 297, 'Untitled design'), d.doc);
   doc.id = opts.newId ? newDocId() : (d.id || d.doc.id || newDocId());
   objs = d.objs; Object.assign(assets, d.assets || {});
+  if (opts.newId || !Array.isArray(d.doc.pages)) doc.pages = Array.isArray(d.doc.pages) ? JSON.parse(JSON.stringify(d.doc.pages)) : null;
+  ensurePages(); thumbCache.clear();
   for (const k in (d.fonts || {})) if (!fonts[k]) await registerFont(k, d.fonts[k]);
   objs.forEach(fitText); one(null); editingId = null; cropState = null;
   resetHistory(); fit(); refreshAll(); setCurrent(doc.id);
@@ -1554,8 +1759,9 @@ async function startBlank(wmm, hmm, name, marks) {
 const fmtDate = t => { const d = new Date(t), now = new Date(); const same = d.toDateString() === now.toDateString();
   return same ? 'Today ' + d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}) : d.toLocaleDateString([], {day: 'numeric', month: 'short', year: d.getFullYear() === now.getFullYear() ? undefined : 'numeric'}) + ' ' + d.toLocaleTimeString([], {hour: '2-digit', minute: '2-digit'}); };
 let libList = [];
-async function openLibrary() {
-  endEdit();
+let libPick = false;
+async function openLibrary(pick) {
+  endEdit(); libPick = pick === true;
   $('#libDlg').hidden = false; $('#libSearch').value = '';
   if (!db) { $('#libGrid').innerHTML = ''; $('#libInfo').innerHTML = 'This browser is blocking storage, so only the current design is kept. Use <b>Back up all designs</b> often, or open the studio in normal Chrome or Edge (not a private window).'; return; }
   await flushSave();
@@ -1568,10 +1774,12 @@ function renderLibrary() {
   $('#libInfo').innerHTML = libList.length
     ? `${libList.length} design${libList.length === 1 ? '' : 's'} saved in this browser. Every change saves automatically. Click a design to open it. Use <b>Back up all designs</b> now and then to keep a copy on a flash drive or Google Drive.`
     : 'No saved designs yet. Anything you make, by hand or with AI, is saved here automatically.';
+  if (libPick && libList.length) $('#libInfo').innerHTML = 'Click <b>+ Add as pages</b> on a design to bring it into the design you have open. It is copied in, so the saved original stays as it is.';
   $('#libGrid').innerHTML = list.length ? list.map(m => `<div class="dcard${m.id === doc.id ? ' cur' : ''}" data-id="${m.id}">
     <button class="dthumb" data-lib="open" title="Open">${m.thumb ? `<img src="${m.thumb}" alt="">` : ''}${m.id === doc.id ? '<span class="badge">Open now</span>' : ''}</button>
-    <div class="dmeta"><b title="${esc(m.name)}">${esc(m.name)}</b><span>${fmtMm(m.wmm)} × ${fmtMm(m.hmm)} mm · ${fmtDate(m.updated)}</span></div>
+    <div class="dmeta"><b title="${esc(m.name)}">${esc(m.name)}</b><span>${fmtMm(m.wmm)} × ${fmtMm(m.hmm)} mm${m.pages > 1 ? ` · ${m.pages} pages` : ''} · ${fmtDate(m.updated)}</span></div>
     <div class="dact">
+      ${m.id !== doc.id ? `<button class="${libPick ? 'btn primary' : 'ibtn'}" data-lib="addpg" title="Add this design to the open design as new page(s)">${libPick ? '+ Add as pages' : '<svg viewBox="0 0 20 20"><path d="M5 2.5h6.5L15.5 6.5V17.5H5z M10 9v6 M7 12h6"/></svg>'}</button>` : ''}
       <button class="ibtn" data-lib="dup" title="Make a copy">${svg('dup')}</button>
       <button class="ibtn" data-lib="dl" title="Download as a file"><svg viewBox="0 0 20 20"><path d="M10 3v10M6 9l4 4 4-4M4 16.5h12"/></svg></button>
       <span class="grow"></span>
@@ -1587,6 +1795,10 @@ $('#libGrid').addEventListener('click', async e => {
     await flushSave();
     const d = await libData(id); if (!d) { toast('That design could not be found.'); return; }
     await loadDesignData(d); closeDlg('#libDlg'); toast(`Opened “${doc.name}”`);
+  } else if (act === 'addpg') {
+    const d = await libData(id); if (!d) { toast('That design could not be found.'); return; }
+    const n = await addDesignAsPages(d); closeDlg('#libDlg');
+    toast(`Added “${d.doc.name || 'design'}” as ${n > 1 ? n + ' new pages' : 'a new page'}. You can now work on both in one design.`);
   } else if (act === 'dup') {
     if (id === doc.id) await flushSave(true);
     const d = await libData(id), m = await libMeta(id); if (!d || !m) return;
@@ -1650,7 +1862,7 @@ async function openProjectFile(f) {
 
 /* ---------------- document setup ---------------- */
 const newDocId = () => 'd' + Date.now().toString(36) + Math.random().toString(36).slice(2, 7);
-function newDoc(wmm, hmm, name) { return {id: newDocId(), name, wmm, hmm, bg: '#ffffff', transparent: false, safe: true, safeMm: 3, grid: false, gridMm: 10, centerMarks: false}; }
+function newDoc(wmm, hmm, name) { return {id: newDocId(), pages: [{pid: newId(), objs: null}], cur: 0, name, wmm, hmm, bg: '#ffffff', transparent: false, safe: true, safeMm: 3, grid: false, gridMm: 10, centerMarks: false}; }
 function sampleDesign() {
   doc = newDoc(216, 89, 'Sample – Birthday mug'); doc.centerMarks = true;
   const pw = W(), ph = H();
@@ -1964,6 +2176,8 @@ document.addEventListener('keydown', e => {
   if (k === ']') order(e.shiftKey ? 'front' : 'fwd');
   if (k === '[') order(e.shiftKey ? 'back' : 'bwd');
   if (k === '?' || (k === '/' && e.shiftKey)) openDlg('#helpDlg');
+  if (k === 'pagedown') { e.preventDefault(); switchPage(doc.cur + 1); }
+  if (k === 'pageup') { e.preventDefault(); switchPage(doc.cur - 1); }
   if (k === '=' || k === '+') setZoom(zoom * 1.25);
   if (k === '-') setZoom(zoom / 1.25);
 });
@@ -2312,7 +2526,7 @@ function openDlg(id, mode) {
   if (id === '#expDlg') { fillCopies(); exInfo(); }
   if (id === '#helpDlg') buildKeys();
   if (id === '#findDlg') { findAt = -1; findCount(); setTimeout(() => { $('#fdFind').focus(); $('#fdFind').select(); }, 30); }
-  if (id === '#aiDlg') { $('#aiStatus').textContent = ''; if (!$('#aiKeyIn').value) $('#aiSet').open = true; setTimeout(() => $('#aiPrompt').focus(), 30); }
+  if (id === '#aiDlg') { if (aiMode === 'new') aiMode = 'edit'; aiRefresh(); $('#aiStatus').textContent = ''; if (!$('#aiKeyIn').value) $('#aiSet').open = true; setTimeout(() => $('#aiPrompt').focus(), 30); }
   $(id).hidden = false;
 }
 function closeDlg(id) { $(id).hidden = true; }
@@ -2377,6 +2591,7 @@ $('#ndResize').addEventListener('click', () => {
 });
 $('#exFmt').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b) return; exFmt = b.dataset.v; $$('#exFmt button').forEach(x => x.classList.toggle('on', x === b)); exInfo(); });
 $('#exDpi').addEventListener('change', exInfo);
+$('#exPages').addEventListener('change', exInfo);
 $('#exSheet').addEventListener('change', () => { $('#exCopies').dataset.touched = ''; fillCopies(); exInfo(); });
 $('#exCopies').addEventListener('change', () => { $('#exCopies').dataset.touched = '1'; exInfo(); });
 $('#exGo').addEventListener('click', doExport);
@@ -2385,12 +2600,25 @@ function buildKeys() {
   const K = [['V','Select'],['H, Space+drag or mouse wheel','Move around'],['R','Rectangle'],['E','Ellipse'],['S','Star / polygon'],['L','Line'],['P','Pen'],['T','Text'],['I','Place image'],['C','Crop photo'],['X','Eraser'],['K','Knife / cut'],['Enter / double-click','Edit text'],
     ['Ctrl+Z','Undo'],['Ctrl+Y','Redo'],['Ctrl+A','Select everything'],['Shift+click','Add to selection'],['Drag on empty space','Select with a box'],['Ctrl+G','Group'],['Ctrl+Shift+G','Ungroup'],['Ctrl+C / Ctrl+V','Copy / paste'],['Ctrl+D','Duplicate'],['Delete','Delete'],['Arrows','Nudge 0.5 mm'],['Shift+Arrows','Nudge 5 mm'],
     [']  /  [','Forward / backward'],['Shift+] / Shift+[','Front / back'],['Shift while drawing','Square / circle'],['Shift while resizing','Free resize (photos)'],['Alt while resizing','Resize from centre'],['Alt while moving','No snapping'],
-    ['Ctrl+wheel','Zoom'],['Ctrl+0','Fit page'],['Ctrl+S','Save to My Designs'],['Ctrl+O','My Designs'],['Ctrl+E','Export'],['Ctrl+N','New design'],['Ctrl+H / Ctrl+F','Find & replace text'],['Drop a PDF on the page','Open it with editable text'],['Ctrl+Enter (in AI box)','Build with AI']];
+    ['Ctrl+wheel','Zoom'],['Ctrl+0','Fit page'],['Ctrl+S','Save to My Designs'],['Ctrl+O','My Designs'],['Ctrl+E','Export'],['Ctrl+N','New design'],['PageDown / PageUp','Next / previous page'],['+ in the page strip','Add a page'],['Ctrl+H / Ctrl+F','Find & replace text'],['Drop a PDF on the page','Open it with editable text'],['Ctrl+Enter (in AI box)','Build with AI']];
   $('#keyList').innerHTML = K.map(([k, v]) => `<div><span>${v}</span><kbd>${k}</kbd></div>`).join('');
 }
 
 /* ---------------- AI design ---------------- */
-let aiMode = 'new', aiCtl = null;
+let aiMode = 'edit', aiCtl = null;
+const AI_EDIT_EXAMPLES = [
+  'Make the main heading bigger and gold',
+  'Change the date to Saturday 12 December 2026 and the venue to Asonkore',
+  'Use a royal blue and white colour scheme instead',
+  'Add a thin gold border around the whole page',
+  'Make it fit an A5 flyer and keep everything inside the safe margin',
+];
+const AI_PAGE_EXAMPLES = [
+  'The back side: programme of events for the day',
+  'A matching thank-you card in the same style',
+  'Same design as a mug wrap',
+  'A version in French',
+];
 const AI_EXAMPLES = [
   'Birthday mug for Kofi turning 30, black and gold, stars, his name big in the middle',
   'Church anniversary T-shirt front: "Grace Chapel 25th Anniversary 2026", royal blue and white',
@@ -2407,6 +2635,39 @@ function saveAiSettings() {
     const remember = $('#aiRemember').checked;
     localStorage.setItem(AI_KEY, JSON.stringify({model: $('#aiModel').value, key: remember ? $('#aiKeyIn').value.trim() : ''}));
   } catch (e) {}
+}
+function aiSelection() { return selected().filter(o => !o.hidden); }
+function aiPlaceholder() {
+  return aiMode === 'page' ? 'Describe the new page. Example: the back side, with the programme of events.'
+    : aiMode === 'new' ? "Describe a new design. Example: a mug for Kofi's 30th birthday, black and gold, his name big in the middle with stars around it."
+    : objs.length ? 'Say what to change. Example: make the names bigger, change the date to 13th December, use gold instead of yellow.'
+    : "This page is empty. Describe the design. Example: an A5 naming ceremony flyer for Baby Adwoa, navy and gold.";
+}
+function aiRefresh() {
+  $$('#aiMode button').forEach(b => b.classList.toggle('on', b.dataset.v === aiMode));
+  const sel = aiSelection(), n = pageCount(), where = n > 1 ? `page ${doc.cur + 1} of ${n}` : 'this page';
+  let thumb = ''; try { thumb = thumbFor(pageRec(doc.cur), objs, 60); } catch (e) {}
+  let msg;
+  if (aiMode === 'new') msg = `Starts a <b>separate design</b>. “${esc(doc.name || 'This design')}” stays in My Designs.`;
+  else if (aiMode === 'page') msg = `Adds a <b>new page after ${where}</b> in the same style. The AI sees ${where} to match its fonts and colours.`;
+  else if (!objs.length) msg = `${n > 1 ? `<b>Page ${doc.cur + 1}</b>` : 'This page'} is empty, so the AI designs it from scratch at ${fmtMm(doc.wmm)} × ${fmtMm(doc.hmm)} mm.`;
+  else msg = `The AI works on <b>${where}</b> (${fmtMm(doc.wmm)} × ${fmtMm(doc.hmm)} mm, ${objs.length} object${objs.length > 1 ? 's' : ''})${sel.length ? `, and knows you selected <b>${esc(sel.slice(0, 3).map(o => o.name || typeLabel(o)).join(', '))}${sel.length > 3 ? ` and ${sel.length - 3} more` : ''}</b>` : ''}. Words like “it” and “this” refer to ${sel.length ? 'your selection' : 'this page'}.`;
+  const log = (doc.aiLog || []).length;
+  if (aiMode !== 'new' && log) msg += ` It also remembers your last ${Math.min(log, 6)} request${log > 1 ? 's' : ''} on this design.`;
+  $('#aiCtx').innerHTML = (aiMode !== 'new' && thumb ? `<img src="${thumb}" alt="">` : '') + `<span>${msg}</span>`;
+  $('#aiPrompt').placeholder = aiPlaceholder();
+  $('#aiSelRow').hidden = !(aiMode === 'edit' && sel.length && objs.length);
+  $('#aiSelLbl').textContent = `Only change what I selected (${sel.length})`;
+  $('#aiLookRow').hidden = aiMode === 'new' || !objs.length;
+  const ex = aiMode === 'page' ? AI_PAGE_EXAMPLES : aiMode === 'edit' && objs.length ? AI_EDIT_EXAMPLES : AI_EXAMPLES;
+  $('#aiChips').innerHTML = ex.map(x => `<button type="button">${esc(x)}</button>`).join('');
+  $('#aiGo').textContent = aiMode === 'edit' && objs.length ? 'Make the change' : aiMode === 'page' ? 'Add the page' : 'Build it';
+}
+async function pagePicture() {
+  const max = 1150, sc = Math.min(max / W(), max / H(), 1);
+  const c = await renderOut(sc, false, false);
+  const url = c.toDataURL('image/jpeg', 0.82); c.width = c.height = 0;
+  return url.slice(url.indexOf(',') + 1);
 }
 function aiSystem() {
   const fl = FONTS.concat(Object.keys(fonts)).join(', ');
@@ -2428,6 +2689,7 @@ Object types:
 - "line": "x1", "y1", "x2", "y2", "stroke", "stroke_width_mm" (no x, y, w, h).
 - "text": "text" (\\n for new lines), "font" (one of: ${fl}), "size_pt", "weight" (300, 400, 500, 600, 700 or 900), "italic", "align" ("left", "center", "right"), "line_height" (about 1.1-1.4), "letter_spacing" (0-40), "curve" (-100 to 100; 0 is straight, positive arches upward like a badge, negative bends like a smile), "fill" is the text colour, "stroke" is an outline colour, optional "emboss" ("none", "emboss" for raised letters, "deboss" for pressed-in letters, "extrude" for 3D block letters) with "emboss_depth_mm" (0.2-1.5 for emboss/deboss, 1-6 for extrude). Gold lettering: gradient "linear", fill "#8a5a12", fill2 "#f7d77a", gradient_angle -90, emboss "emboss". "w" is the wrap width; height is calculated automatically.
 - "image" and "path": these already exist in the user's design. Keep their "id". You may change x, y, w, h, rotation, opacity. Never invent new ones.
+When you are given the current page, every object has an "id". Keep the "id" of every object you keep or change, so the app keeps details you did not touch. New objects have no "id". Leave out an object only when the user wants it removed. If a picture of the page is attached, use it to understand what the user sees, including photos and logos.
 Sizing: 1 pt = 0.353 mm, so text 10 mm tall is about 36 pt. A heading on an A4 flyer is usually 40-90 pt; on a business card 9-16 pt; on a mug wrap 24-70 pt.
 Design rules: every piece of text sits inside the safe margin (3 mm from each edge, 5 mm for paper sizes A5 and up). Make one element clearly dominant. Use 2-4 colours with strong contrast so it prints well. Centre layouts suit mugs, shirts and plates. A mug wrap is wide: put the main design in the centre, or repeat it in the left and right thirds. Use simple shapes (bands, circles, stars, frames, ribbons made of rects) so it looks professional. Use the real words from the request; never lorem ipsum. Where details are missing (a phone number, a date) write a clear placeholder like "024 XXX XXXX". Use a full-page rect for coloured or gradient backgrounds. Usually 6-30 objects.`;
 }
@@ -2438,7 +2700,7 @@ function toAI(o) {
   if (o.opacity !== 1) a.opacity = o.opacity;
   if (o.type === 'image') return Object.assign({type: 'image'}, a);
   if (o.type === 'path' && !o.closed && o.pts.length === 2) {
-    const P = worldPoly(o); return {type: 'line', name: o.name, x1: r(P[0][0]), y1: r(P[0][1]), x2: r(P[1][0]), y2: r(P[1][1]), stroke: o.stroke, stroke_width_mm: r(o.sw)};
+    const P = worldPoly(o); return {type: 'line', id: o.id, name: o.name, x1: r(P[0][0]), y1: r(P[0][1]), x2: r(P[1][0]), y2: r(P[1][1]), stroke: o.stroke, stroke_width_mm: r(o.sw)};
   }
   a.type = o.type === 'poly' ? (o.star ? 'star' : 'polygon') : o.type;
   a.fill = o.fillOn ? o.fill : null;
@@ -2450,20 +2712,36 @@ function toAI(o) {
   if (o.type === 'text') Object.assign(a, {text: o.text, font: o.font, size_pt: Math.round(o.size / DPI * 72 * 10) / 10, weight: o.weight, italic: o.italic, align: o.align, line_height: o.lh, letter_spacing: o.ls, curve: o.curve}, o.emb && o.emb !== 'none' ? {emboss: o.emb, emboss_depth_mm: r(o.embDepth ?? EMB_DEFAULTS.embDepth)} : {});
   return a;
 }
-function aiUserText(prompt) {
-  if (aiMode === 'edit' && objs.length) {
-    const cur = {page: {name: doc.name, width_mm: doc.wmm, height_mm: doc.hmm, background: doc.bg}, objects: objs.map(toAI)};
-    return `Change request: ${prompt}\n\nThe current design:\n${JSON.stringify(cur)}\n\nReturn the complete updated design with every object that should stay (keep ids of images and paths). Leave anything the request does not mention as it is.`;
-  }
+function aiUserText(prompt, mode, sel, selOnly, pic) {
   const presets = PRESETS.map(p => `${p.n} ${fmtMm(p.w)} x ${fmtMm(p.h)} mm`).join('; ');
-  return `Design request: ${prompt}\n\nThe page is currently ${fmtMm(doc.wmm)} x ${fmtMm(doc.hmm)} mm. If the request names a product, use its size from these presets: ${presets}. Otherwise keep the current page size.`;
+  const n = pageCount(), where = n > 1 ? `page ${doc.cur + 1} of ${n}` : 'the only page';
+  const cur = JSON.stringify({page: {name: doc.name, width_mm: doc.wmm, height_mm: doc.hmm, background: doc.transparent ? null : doc.bg}, objects: objs.map(toAI)});
+  const log = (doc.aiLog || []).slice(-6);
+  const history = mode !== 'new' && log.length ? `Earlier requests on this design, oldest first (for context; they are already done):\n${log.map((h, i) => `${i + 1}. "${h.p}"${h.n ? ` → ${h.n}` : ''}`).join('\n')}\n\n` : '';
+  const seen = pic ? ' The attached picture shows this page exactly as the user sees it.' : '';
+  if (mode === 'page') {
+    return `${history}Make a NEW page for the design "${doc.name}": ${prompt}\n\nIt will be added after ${where}. Match the look of that page (fonts, colours, layout style) unless the request says otherwise. Use the same page size unless the request asks for another size; if it names a product, use its size from these presets: ${presets}. Objects on the new page are new, so give them no "id", except that you may reuse an existing "image" (a photo or logo) by giving its "id".${seen}\n\nThe existing page, for reference:\n${cur}`;
+  }
+  if (mode === 'edit' && objs.length) {
+    const selText = sel.length ? `\n\nThe user has selected: ${sel.map(o => `${o.id} ("${o.name || typeLabel(o)}")`).join(', ')}. "It", "this", "these" and "the selected" mean these objects.${selOnly ? ' Change ONLY the selected objects (and add new objects if asked). Return every other object exactly as it is.' : ''}` : '';
+    return `${history}Change request: ${prompt}\n\nYou are changing ${where} of the design "${doc.name}".${seen}${selText}\n\nThe current page:\n${cur}\n\nReturn the complete updated page with every object that should stay, keeping each object's "id". Leave anything the request does not mention exactly as it is.`;
+  }
+  return `${history}Design request: ${prompt}\n\nThe page is currently ${fmtMm(doc.wmm)} x ${fmtMm(doc.hmm)} mm${mode === 'edit' && n > 1 ? ` (it is ${where} of a multi-page design)` : ''}. If the request names a product, use its size from these presets: ${presets}. Otherwise keep the current page size.`;
 }
 function fromAI(a, keep, used) {
   if (!a || typeof a !== 'object') return null;
   const t = String(a.type || '').toLowerCase(), M = v => mm2px(+v || 0);
   const n_ = (v, d) => (v !== null && v !== '' && Number.isFinite(+v)) ? +v : d;
   let o;
-  if (a.id && keep[a.id] && (keep[a.id].type === 'image' || keep[a.id].type === 'path')) { o = JSON.parse(JSON.stringify(keep[a.id])); used.add(a.id); }
+  const prev = a.id && keep[a.id] ? keep[a.id] : null;
+  const sameKind = prev && (prev.type === 'image' || (prev.type === 'path' && t !== 'text') || (t === 'text' && prev.type === 'text')
+    || ((t === 'rect' || t === 'ellipse') && prev.type === t) || ((t === 'star' || t === 'polygon') && prev.type === 'poly'));
+  if (sameKind) {
+    o = JSON.parse(JSON.stringify(prev)); used.add(a.id);
+    if (o.type === 'poly') { o.star = t === 'star' ? true : t === 'polygon' ? false : o.star; if (a.points !== undefined) o.sides = clamp(n_(a.points, o.sides) | 0, 3, 24); if (a.inner !== undefined) o.inner = clamp(n_(a.inner, o.inner), 0.1, 0.95); }
+    if (o.type === 'text' && 'text' in a) o.text = String(a.text ?? '').slice(0, 3000);
+    if (t === 'line' && o.type === 'path' && a.x1 !== undefined) setLine(o, M(a.x1), M(a.y1), M(a.x2), M(a.y2));
+  }
   else if (t === 'rect' || t === 'ellipse') o = makeShape(t, 0, 0);
   else if (t === 'star' || t === 'polygon') { o = makeShape('poly', 0, 0); o.star = t === 'star'; o.sides = clamp(n_(a.points, 5) | 0, 3, 24); o.inner = clamp(n_(a.inner, 0.45), 0.1, 0.95); o.name = nextName(typeLabel(o)); }
   else if (t === 'line') { o = base('path', 0, 0); Object.assign(o, {closed: false, smooth: false, fillOn: false, strokeOn: true, stroke: '#1b1b1b', sw: mm2px(0.8), pts: [[0, 0], [1, 1]], name: nextName('Line')}); setLine(o, M(a.x1), M(a.y1), M(a.x2), M(a.y2)); }
@@ -2479,7 +2757,8 @@ function fromAI(a, keep, used) {
   o.rot = n_(a.rotation, o.rot || 0); o.opacity = clamp(n_(a.opacity, o.opacity ?? 1), 0, 1);
   if ('fill' in a && o.type !== 'image') { const c = hex6(a.fill); o.fillOn = !!c; if (c) o.fill = c; }
   const g = String(a.gradient || '').toLowerCase();
-  if (g === 'linear' || g === 'radial') { o.fillType = g; o.fill2 = hex6(a.fill2) || '#ffffff'; o.gAngle = n_(a.gradient_angle, 0); }
+  if (g === 'linear' || g === 'radial') { o.fillType = g; o.fill2 = hex6(a.fill2) || o.fill2 || '#ffffff'; o.gAngle = n_(a.gradient_angle, o.gAngle || 0); }
+  else if ('gradient' in a && o.type !== 'image') o.fillType = 'solid';
   if ('stroke' in a) { const c = hex6(a.stroke); o.strokeOn = !!c; if (c) o.stroke = c; }
   if (a.stroke_width_mm !== undefined) o.sw = Math.max(0, M(a.stroke_width_mm));
   if ('shadow' in a) o.shadow = !!a.shadow;
@@ -2491,7 +2770,7 @@ function fromAI(a, keep, used) {
     if (a.weight !== undefined) o.weight = [300, 400, 500, 600, 700, 900].includes(+a.weight) ? +a.weight : 700;
     if ('italic' in a) o.italic = !!a.italic;
     if (['left', 'center', 'right'].includes(a.align)) o.align = a.align;
-    o.lh = clamp(n_(a.line_height, o.lh), 0.7, 3); o.ls = clamp(n_(a.letter_spacing, o.ls), -10, 100); o.curve = clamp(n_(a.curve, 0), -100, 100);
+    o.lh = clamp(n_(a.line_height, o.lh), 0.7, 3); o.ls = clamp(n_(a.letter_spacing, o.ls), -10, 100); o.curve = clamp(n_(a.curve, o.curve || 0), -100, 100);
     const was = a.id && keep[a.id] && keep[a.id].type === 'text' ? keep[a.id] : null;
     const style = String(a.emboss || '').toLowerCase();
     if (['emboss', 'deboss', 'extrude'].includes(style)) {
@@ -2500,27 +2779,55 @@ function fromAI(a, keep, used) {
       if (a.emboss_depth_mm !== undefined) o.embDepth = clamp(M(a.emboss_depth_mm), mm2px(0.05), mm2px(15));
     } else if (style === 'none') o.emb = 'none';
     else if (was) Object.keys(EMB_DEFAULTS).forEach(q => { if (was[q] !== undefined) o[q] = was[q]; });
-    if (a.w === undefined) { o.w = W() * 0.8; }
+    if (a.w === undefined && !sameKind) { o.w = W() * 0.8; }
     fitText(o);
   }
   return o;
 }
-function applyAI(d) {
-  if (!d || !Array.isArray(d.objects)) throw new Error('The AI reply was incomplete. Please try again.');
-  const editing = aiMode === 'edit' && objs.length, keep = {}, used = new Set();
-  if (editing) objs.forEach(o => keep[o.id] = o);
-  const pg = d.page || {};
+function applyAI(d, mode, sel = [], selOnly = false) {
+  if (!d || !Array.isArray(d.objects) || !d.objects.length) throw new Error('The AI reply was incomplete. Please try again.');
+  const pg = d.page || {}, keep = {}, used = new Set(), before = objs.slice();
+  if (mode !== 'new') objs.forEach(o => keep[o.id] = o);
+  const pw = clamp(+pg.width_mm || doc.wmm, 10, 1500), ph = clamp(+pg.height_mm || doc.hmm, 10, 1500);
+  let addedPage = false;
   // page first, so text widths and fallbacks use the right size
-  if (!editing) {
-    const nd = newDoc(clamp(+pg.width_mm || doc.wmm, 10, 1500), clamp(+pg.height_mm || doc.hmm, 10, 1500), String(pg.name || 'AI design').slice(0, 60));
-    nd.centerMarks = doc.centerMarks; doc = nd;
-  } else if (+pg.width_mm && +pg.height_mm) { doc.wmm = clamp(+pg.width_mm, 10, 1500); doc.hmm = clamp(+pg.height_mm, 10, 1500); }
+  if (mode === 'new') {
+    const nd = newDoc(pw, ph, String(pg.name || 'AI design').slice(0, 60));
+    nd.centerMarks = doc.centerMarks; doc = nd; objs = [];
+  } else if (mode === 'page') {
+    insertPage({wmm: pw, hmm: ph, bg: hex6(pg.background) || '#ffffff'}, doc.cur + 1, true, true); addedPage = true;
+  } else if (+pg.width_mm && +pg.height_mm) { doc.wmm = pw; doc.hmm = ph; }
   if (hex6(pg.background)) { doc.bg = hex6(pg.background); doc.transparent = false; }
-  const prev = objs; objs = [];
-  const list = [];
-  d.objects.forEach(a => { const o = fromAI(a, keep, used); if (o) { list.push(o); objs = list; } });
-  if (!list.length) { objs = prev; throw new Error('The AI did not return any objects. Try describing the design differently.'); }
-  if (editing) prev.forEach(o => { if (o.type === 'image' && !used.has(o.id)) list.push(o); });
+  if (!objs.length && mode === 'edit' && !before.length && pg.name && /^(untitled|ai design)/i.test(doc.name || 'untitled')) doc.name = String(pg.name).slice(0, 60);
+  let list = [];
+  objs = list;
+  d.objects.forEach(a => {
+    const o = fromAI(a, keep, used);
+    if (!o) return;
+    if (mode === 'page' && keep[o.id]) { o.id = newId(); delete o.group; } // reused photo becomes its own copy
+    list.push(o);
+  });
+  if (!list.length) {
+    if (addedPage) deletePage(doc.cur); else objs = before;
+    throw new Error('The AI did not return anything usable. Try describing it differently.');
+  }
+  if (mode === 'edit' && before.length) {
+    const origIdx = new Map(before.map((o, i) => [o.id, i]));
+    // photos and locked layers the AI left out stay where they were in the stack
+    before.forEach(o => {
+      if (used.has(o.id) || !(o.type === 'image' || o.locked)) return;
+      const at = list.findIndex(q => origIdx.has(q.id) && origIdx.get(q.id) > origIdx.get(o.id));
+      if (at < 0) list.push(o); else list.splice(at, 0, o);
+    });
+    if (selOnly && sel.length) {
+      // only the selection may change: everything else comes back exactly as it was
+      const selSet = new Set(sel), byAi = new Map(list.filter(o => keep[o.id]).map(o => [o.id, o])), fresh = list.filter(o => !keep[o.id]);
+      const out = []; let last = -1;
+      before.forEach(o => { if (selSet.has(o.id)) { if (byAi.has(o.id)) out.push(byAi.get(o.id)); last = out.length - 1; } else out.push(o); });
+      out.splice(last + 1, 0, ...fresh);
+      list = out;
+    }
+  }
   objs = list; one(null); fit(); refreshAll(); commit();
 }
 async function runAI() {
@@ -2531,15 +2838,23 @@ async function runAI() {
   if (navigator.onLine === false) { say('AI Design needs internet. Connect and try again. Everything else works offline.', true); return; }
   saveAiSettings();
   await flushSave();
+  const mode = aiMode, sel = mode === 'edit' ? aiSelection().map(o => o.id) : [], selObjs = aiSelection();
+  const selOnly = mode === 'edit' && sel.length > 0 && $('#aiSelOnly').checked;
+  const look = mode !== 'new' && objs.length > 0 && $('#aiLook').checked;
   const btn = $('#aiGo'); btn.disabled = true; aiCtl = new AbortController();
-  const t0 = Date.now(), msg = aiMode === 'edit' && objs.length ? 'Changing your design' : 'Designing';
+  const t0 = Date.now(), msg = mode === 'edit' && objs.length ? 'Changing this page' : mode === 'page' ? 'Making the new page' : 'Designing';
   say(`<span class="spin"></span>${msg}…`);
   const tick = setInterval(() => say(`<span class="spin"></span>${msg}… ${Math.round((Date.now() - t0) / 1000)}s`), 1000);
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST', signal: aiCtl.signal,
       headers: {'content-type': 'application/json', 'x-api-key': key, 'anthropic-version': '2023-06-01', 'anthropic-dangerous-direct-browser-access': 'true'},
-      body: JSON.stringify({model, max_tokens: 16000, system: aiSystem(), messages: [{role: 'user', content: aiUserText(prompt)}]}),
+      body: JSON.stringify({model, max_tokens: 16000, system: aiSystem(), messages: [{role: 'user', content: await (async () => {
+        const text = aiUserText(prompt, mode, mode === 'edit' ? selObjs : [], selOnly, look);
+        if (!look) return text;
+        let pic = null; try { pic = await pagePicture(); } catch (e) {}
+        return pic ? [{type: 'image', source: {type: 'base64', media_type: 'image/jpeg', data: pic}}, {type: 'text', text}] : text;
+      })()}]}),
     });
     const data = await res.json().catch(() => ({}));
     if (!res.ok) {
@@ -2553,14 +2868,16 @@ async function runAI() {
     let d;
     try { d = JSON.parse(text.slice(text.indexOf('{'), text.lastIndexOf('}') + 1)); }
     catch (e) { throw new Error(data.stop_reason === 'max_tokens' ? 'The design was too big to finish. Ask for something a little simpler.' : 'The AI reply could not be read. Please try again.'); }
-    const wasNew = !(aiMode === 'edit' && objs.length), prevKept = wasNew && objs.length > 0 && libKnown.has(doc.id);
-    applyAI(d);
+    const prevKept = mode === 'new' && allObjs().length > 0 && libKnown.has(doc.id);
+    applyAI(d, mode, sel, selOnly);
+    // remember the conversation so follow-ups like "make it bigger" make sense
+    doc.aiLog = (mode === 'new' ? [] : (doc.aiLog || [])).concat([{p: prompt.slice(0, 300), n: String(d.note || '').slice(0, 200)}]).slice(-8);
     await flushSave(true);
     closeDlg('#aiDlg'); say('');
-    d.note = (d.note || 'Design ready.') + (prevKept ? ' Your previous design is in My Designs.' : '');
-    toast((d.note ? d.note + ' ' : 'Design ready. ') + 'Ctrl+Z to undo.');
-    // follow-up requests change this design by default
-    aiMode = 'edit'; $$('#aiMode button').forEach(b => b.classList.toggle('on', b.dataset.v === 'edit')); $('#aiPrompt').value = '';
+    d.note = (d.note || 'Done.') + (mode === 'page' ? ` It is page ${doc.cur + 1}.` : '') + (prevKept ? ' Your previous design is in My Designs.' : '');
+    toast(d.note + ' Ctrl+Z to undo.');
+    // follow-up requests change what is now on screen
+    aiMode = 'edit'; $('#aiPrompt').value = '';
   } catch (e) {
     if (e.name === 'AbortError') say('Stopped.');
     else say(esc(e.message === 'Failed to fetch' || e instanceof TypeError ? 'Could not reach the AI service. Check your internet connection.' : e.message), true);
@@ -2568,8 +2885,7 @@ async function runAI() {
 }
 $('#aiGo').addEventListener('click', runAI);
 $('#aiPrompt').addEventListener('keydown', e => { if (e.key === 'Enter' && (e.ctrlKey || e.metaKey)) { e.preventDefault(); runAI(); } });
-$('#aiMode').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b) return; aiMode = b.dataset.v; $$('#aiMode button').forEach(x => x.classList.toggle('on', x === b)); });
-$('#aiChips').innerHTML = AI_EXAMPLES.map(x => `<button type="button">${esc(x)}</button>`).join('');
+$('#aiMode').addEventListener('click', e => { const b = e.target.closest('[data-v]'); if (!b) return; aiMode = b.dataset.v; aiRefresh(); });
 $('#aiChips').addEventListener('click', e => { const b = e.target.closest('button'); if (b) { $('#aiPrompt').value = b.textContent; $('#aiPrompt').focus(); } });
 $('#aiKeyIn').addEventListener('change', saveAiSettings);
 $('#aiModel').addEventListener('change', saveAiSettings);
@@ -2581,29 +2897,31 @@ const reEsc = s => s.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 function findRe() { const f = $('#fdFind').value; return f ? new RegExp(reEsc(f), $('#fdCase').checked ? 'g' : 'gi') : null; }
 function findCount() {
   const re = findRe(), info = $('#fdInfo');
-  if (!re) { info.textContent = 'Changes every text box in this design. Handy for reusing a certificate or invoice with new names and dates.'; return; }
-  let n = 0, boxes = 0;
-  objs.forEach(o => { if (o.type === 'text') { const m = String(o.text).match(re); if (m) { n += m.length; boxes++; } } });
-  info.textContent = n ? `${n} match${n > 1 ? 'es' : ''} in ${boxes} text box${boxes > 1 ? 'es' : ''}.` : 'No matches.';
+  if (!re) { info.textContent = 'Changes every text box on every page of this design. Handy for reusing a certificate or invoice with new names and dates.'; return; }
+  let n = 0, boxes = 0; const pgs = new Set();
+  doc.pages.forEach((_, i) => pageObjs(i).forEach(o => { if (o.type === 'text') { const m = String(o.text).match(re); if (m) { n += m.length; boxes++; pgs.add(i); } } }));
+  info.textContent = n ? `${n} match${n > 1 ? 'es' : ''} in ${boxes} text box${boxes > 1 ? 'es' : ''}${pageCount() > 1 ? ` on ${pgs.size} page${pgs.size > 1 ? 's' : ''}` : ''}.` : 'No matches.';
 }
 let findAt = -1;
 $('#fdFind').addEventListener('input', () => { findAt = -1; findCount(); });
 $('#fdCase').addEventListener('change', () => { findAt = -1; findCount(); });
 $('#fdNext').addEventListener('click', () => {
   const re = findRe(); if (!re) return;
-  const hits = objs.filter(o => o.type === 'text' && String(o.text).match(re));
+  const hits = [];
+  doc.pages.forEach((_, i) => pageObjs(i).forEach(o => { if (o.type === 'text' && String(o.text).match(re)) hits.push({i, o}); }));
   if (!hits.length) { findCount(); return; }
-  findAt = (findAt + 1) % hits.length; const o = hits[findAt];
+  findAt = (findAt + 1) % hits.length; const {i: hp, o} = hits[findAt];
+  if (hp !== doc.cur) switchPage(hp);
   one(o.id); refreshAll();
   // bring it into view
   const c = center(o), sw = stage.clientWidth, sh = stage.clientHeight;
   panX = sw / 2 - c.x * zoom; panY = sh / 2 - c.y * zoom; requestRender();
-  $('#fdInfo').textContent = `Showing ${findAt + 1} of ${hits.length}: “${o.name}”`;
+  $('#fdInfo').textContent = `Showing ${findAt + 1} of ${hits.length}: “${o.name}”${pageCount() > 1 ? ` on page ${hp + 1}` : ''}`;
 });
 $('#fdAll').addEventListener('click', () => {
   const re = findRe(); if (!re) { $('#fdFind').focus(); return; }
   const rep = $('#fdRep').value; let n = 0;
-  objs.forEach(o => {
+  doc.pages.map((_, i) => pageObjs(i)).flat().forEach(o => {
     if (o.type !== 'text') return; const t = String(o.text); const m = t.match(re); if (!m) return;
     n += m.length;
     const unwrapped = !o.curve && layoutText(o).length === t.split('\n').length;
@@ -2618,7 +2936,7 @@ $('#fdAll').addEventListener('click', () => {
     if (o.name === t.trim().slice(0, 28)) o.name = o.text.trim().slice(0, 28) || o.name;
   });
   if (!n) { $('#fdInfo').textContent = 'No matches.'; return; }
-  refreshAll(); commit(); findAt = -1;
+  thumbCache.clear(); refreshAll(); commit(); findAt = -1;
   $('#fdInfo').textContent = `Replaced ${n} time${n > 1 ? 's' : ''}. Ctrl+Z undoes it.`;
 });
 $('#fdFind').addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); $('#fdNext').click(); } });
@@ -2924,7 +3242,7 @@ async function pickImport(file) {
       return;
     }
     const n = imp.pdf.numPages;
-    pages.innerHTML = Array.from({length: Math.min(n, 300)}, (_, i) => `<option value="${i + 1}">Page ${i + 1} of ${n}</option>`).join('') + (n > 1 ? `<option value="all">All ${n} pages (each becomes its own design)</option>` : '');
+    pages.innerHTML = Array.from({length: Math.min(n, 300)}, (_, i) => `<option value="${i + 1}">Page ${i + 1} of ${n}</option>`).join('') + (n > 1 ? `<option value="all">All ${n} pages, as pages of one design</option>` : '');
     pages.closest('.row').hidden = false;
   } else {
     pages.innerHTML = '<option value="1">Page 1</option>'; pages.closest('.row').hidden = true;
@@ -2975,7 +3293,6 @@ async function runImport() {
   if (!imp || imp.busy || !imp.file) return;
   const mode = $('#impMode').value, lang = $('#impLang').value, opts = {clean: $('#impClean').checked, join: $('#impJoin').checked};
   const which = $('#impPages').value, list = imp.kind === 'pdf' ? (which === 'all' ? Array.from({length: imp.pdf.numPages}, (_, i) => i + 1) : [+which]) : [1];
-  if (list.length > 1 && !db) { impSay('This browser is blocking storage, so only one page can be kept. Pick a single page.', true); return; }
   imp.busy = true; imp.cancel = false; $('#impGo').disabled = true;
   const baseName = imp.file.name.replace(/\.[a-z0-9]+$/i, '').slice(0, 50) || 'Imported document';
   let made = 0, usedOcr = false, textCount = 0;
@@ -2997,8 +3314,15 @@ async function runImport() {
       if (imp.cancel) break;
       const paras = mode === 'none' ? [] : await readPage(pg.canvas, lines, Object.assign({ocr}, opts), m => impSay(tag + m));
       textCount += paras.length;
-      const name = baseName + (list.length > 1 || (imp.pdf && imp.pdf.numPages > 1) ? ` · page ${n}` : '');
-      const nd = newDoc(Math.round(pg.wmm * 10) / 10, Math.round(pg.hmm * 10) / 10, name);
+      const pw = Math.round(pg.wmm * 10) / 10, ph = Math.round(pg.hmm * 10) / 10;
+      if (made > 0) {
+        // later pages join the design opened from the first page
+        insertPage({wmm: pw, hmm: ph, bg: '#ffffff'}, doc.pages.length, true, true);
+        objs.push(...pageObjects(pg.canvas, paras, pg.f, `page ${n}`));
+        made++; continue;
+      }
+      const name = baseName + (list.length === 1 && imp.pdf && imp.pdf.numPages > 1 ? ` · page ${n}` : '');
+      const nd = newDoc(pw, ph, name);
       const prevDoc = doc, prevObjs = objs;
       doc = nd; // page size first, so text widths are measured against the right page
       let list2;
@@ -3009,8 +3333,9 @@ async function runImport() {
       made++;
     }
     if (!made) { impSay('Stopped.'); return; }
+    if (made > 1) { switchPage(0); resetHistory(); if (db) await flushSave(true); }
     closeDlg('#pdfDlg'); impSay('');
-    toast(`${made > 1 ? made + ' pages opened, each saved in My Designs. ' : ''}${textCount ? `${textCount} text box${textCount > 1 ? 'es are' : ' is'} ready to edit` : mode === 'none' ? 'The page is in as a picture' : 'No text was found, so the page came in as a picture'}${usedOcr && textCount ? '. Check spellings from the scan' : ''}.`);
+    toast(`${made > 1 ? made + ' pages opened as one design (see the page strip below). ' : ''}${textCount ? `${textCount} text box${textCount > 1 ? 'es are' : ' is'} ready to edit` : mode === 'none' ? 'The page is in as a picture' : 'No text was found, so the page came in as a picture'}${usedOcr && textCount ? '. Check spellings from the scan' : ''}.`);
     setTool('select');
   } catch (e) {
     impSay(esc(e.message || 'Something went wrong while reading this file.'), true);
@@ -3051,8 +3376,10 @@ async function ocrImageObject(o) {
 /* ---------------- misc ---------------- */
 let toastT = null;
 function toast(msg) { const t = $('#toast'); t.textContent = msg; t.hidden = false; clearTimeout(toastT); toastT = setTimeout(() => t.hidden = true, 2600); }
-function updateDocInfo() { $('#docInfo').textContent = `${fmtMm(doc.wmm)} × ${fmtMm(doc.hmm)} mm · ${Math.round(W())} × ${Math.round(H())} px @ 300 DPI`; }
+function updateDocInfo() { $('#docInfo').textContent = `${pageCount() > 1 ? `Page ${doc.cur + 1}/${pageCount()} · ` : ''}${fmtMm(doc.wmm)} × ${fmtMm(doc.hmm)} mm · ${Math.round(W())} × ${Math.round(H())} px @ 300 DPI`; }
 function refreshAll() {
+  ensurePages();
+  renderPages();
   if (document.activeElement !== $('#docName')) $('#docName').value = doc.name || '';
   renderProps(); renderLayers(); updateDocInfo(); requestRender();
 }
